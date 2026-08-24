@@ -91,9 +91,9 @@ Sin este paso la app funciona igual, solo que sin sincronizar y sin vista del al
 2. Ve a **SQL Editor → New query**, pega el contenido de `supabase/esquema.sql` completo y pulsa **Run**. Crea la tabla y las políticas de seguridad.
 3. En **Authentication → Providers**, deja **Email** activado. No hace falta contraseña: se entra con enlace mágico.
 4. En **Authentication → URL Configuration**, agrega la URL de tu app en *Site URL* y en *Redirect URLs*.
-5. Copia de **Project Settings → API** dos valores: la *Project URL* y la clave *anon public*.
+5. Copia de **Settings → API Keys** la clave pública: en proyectos nuevos es la *Publishable key* (`sb_publishable_...`), en los viejos la *anon*. Sirven las dos. La *Project URL* está en **Settings → API** o en el botón **Connect**.
 
-Esa clave `anon` es pública a propósito: no da acceso a nada por sí sola, porque las políticas de seguridad exigen sesión iniciada. Sin sesión no se puede leer ni una fila.
+Esa clave es pública a propósito: no da acceso a nada por sí sola, porque las políticas de seguridad exigen sesión iniciada. Sin sesión no se puede leer ni una fila. La que **nunca** se pone aquí es la *secret* o *service_role*: esa se salta toda la seguridad.
 
 ## 4. Publicarla en Vercel
 
@@ -105,7 +105,7 @@ Esa clave `anon` es pública a propósito: no da acceso a nada por sí sola, por
    - Output Directory: `dist`
 4. En **Environment Variables**, agrega las dos de Supabase (omítelas si vas sin nube):
    - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_SUPABASE_KEY`
 5. Pulsa **Deploy**. En un minuto tienes la URL, con HTTPS incluido.
 
 Si agregas las variables después, hay que volver a desplegar: Vite las incrusta al compilar.
