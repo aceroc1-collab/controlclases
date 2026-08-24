@@ -1,0 +1,17 @@
+{
+  "name": "Control de clases",
+  "short_name": "Clases",
+  "description": "Planes, asistencias y cobranza de beach tennis y funcional",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2ede2",
+  "theme_color": "#0f2440",
+  "lang": "es",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
