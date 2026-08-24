@@ -177,3 +177,5 @@ pruebas/
 ```
 
 Toda la lógica de vencimientos está en `estadoPlan()` dentro de `src/lib/motor.js`. Si algún día cambias una regla del negocio, se cambia ahí y el resto de la app la hereda.
+
+
