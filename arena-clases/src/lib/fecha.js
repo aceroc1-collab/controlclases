@@ -71,6 +71,31 @@ export function mesSiguiente(iso) {
   return aISO(new Date(d.getFullYear(), d.getMonth() + 1, 1))
 }
 
+// Semana de lunes a domingo. diaSemana() devuelve 0=domingo, por eso el
+// desplazamiento (+6)%7 para que el lunes quede primero.
+export function inicioSemana(iso) {
+  const offset = (diaSemana(iso) + 6) % 7
+  return sumarDias(iso, -offset)
+}
+
+export function diasDeSemana(iso) {
+  const ini = inicioSemana(iso)
+  return Array.from({ length: 7 }, (_, i) => sumarDias(ini, i))
+}
+
+export function semanaAnterior(iso) {
+  return sumarDias(inicioSemana(iso), -7)
+}
+
+export function semanaSiguiente(iso) {
+  return sumarDias(inicioSemana(iso), 7)
+}
+
+export function fmtRangoSemana(iso) {
+  const dias = diasDeSemana(iso)
+  return `${fmtCorta(dias[0])} – ${fmtCorta(dias[6])}`
+}
+
 export function enRango(iso, desde, hasta) {
   return iso >= desde && iso <= hasta
 }

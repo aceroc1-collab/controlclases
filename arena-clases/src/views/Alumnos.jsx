@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Avatar, Vacio, Modal } from '../components/UI.jsx'
 import { planActivo, estadoPlan, saldoAlumno, saldoTotalPositivo } from '../lib/motor.js'
 import { telefonoValido } from '../lib/mensajes.js'
+import { redimensionarFoto } from '../lib/foto.js'
 
 export default function Alumnos({ db, acc, irAlumno, avisar }) {
   const [busca, setBusca] = useState('')
@@ -45,9 +46,14 @@ export default function Alumnos({ db, acc, irAlumno, avisar }) {
               const plan = planActivo(db, a.id)
               const est = plan ? estadoPlan(plan, db.eventos, db.suspensiones) : null
               const debe = saldoTotalPositivo(saldoAlumno(db, a.id))
+              const severidad = est && est.vencido ? 'rojo' : est && est.porAvisar ? 'oro' : debe > 0 ? 'rojo' : null
               return (
-                <div className="lista-item" key={a.id} onClick={() => irAlumno(a.id)}>
-                  <Avatar nombre={a.nombre} disciplina={a.disciplina} />
+                <div
+                  className={'lista-item' + (severidad ? ' borde-' + severidad : '')}
+                  key={a.id}
+                  onClick={() => irAlumno(a.id)}
+                >
+                  <Avatar nombre={a.nombre} disciplina={a.disciplina} foto={a.foto} anillo={severidad} />
                   <div className="crece">
                     <div className="nombre">{a.nombre}</div>
                     <div className="sub">
@@ -76,7 +82,7 @@ export default function Alumnos({ db, acc, irAlumno, avisar }) {
               .filter((a) => a.activo === false)
               .map((a) => (
                 <div className="lista-item" key={a.id} onClick={() => irAlumno(a.id)}>
-                  <Avatar nombre={a.nombre} disciplina={a.disciplina} />
+                  <Avatar nombre={a.nombre} disciplina={a.disciplina} foto={a.foto} />
                   <div className="crece">
                     <div className="nombre">{a.nombre}</div>
                     <div className="sub">Archivado</div>
@@ -97,19 +103,52 @@ export function FormAlumno({ db, acc, inicial, onCerrar, avisar }) {
   const [telefono, setTelefono] = useState(inicial.telefono || '')
   const [disciplina, setDisciplina] = useState(inicial.disciplina || 'tenis')
   const [notas, setNotas] = useState(inicial.notas || '')
+  const [foto, setFoto] = useState(inicial.foto || '')
+  const [subiendo, setSubiendo] = useState(false)
   const [error, setError] = useState('')
+
+  const elegirFoto = async (e) => {
+    const f = e.target.files && e.target.files[0]
+    e.target.value = ''
+    if (!f) return
+    setSubiendo(true)
+    try {
+      setFoto(await redimensionarFoto(f))
+    } catch (err) {
+      setError('No se pudo procesar la foto: ' + err.message)
+    }
+    setSubiendo(false)
+  }
 
   const guardar = () => {
     if (!nombre.trim()) return setError('Escribe el nombre del alumno')
     if (telefono && !telefonoValido(telefono, db.ajustes.codigoPais))
       return setError('El teléfono no parece válido. Usa el número con código de país, por ejemplo +58 412 1234567')
-    acc.guardarAlumno({ ...inicial, nombre: nombre.trim(), telefono: telefono.trim(), disciplina, notas })
+    acc.guardarAlumno({ ...inicial, nombre: nombre.trim(), telefono: telefono.trim(), disciplina, notas, foto })
     avisar(inicial.id ? 'Ficha actualizada' : 'Alumno agregado')
     onCerrar()
   }
 
   return (
     <Modal titulo={inicial.id ? 'Editar alumno' : 'Nuevo alumno'} onCerrar={onCerrar}>
+      <div className="campo">
+        <label>Foto (opcional)</label>
+        <div className="fila">
+          <Avatar nombre={nombre} disciplina={disciplina} foto={foto} />
+          <div className="btns" style={{ marginTop: 0 }}>
+            <label className="btn chico" style={{ cursor: 'pointer' }}>
+              {subiendo ? 'Procesando…' : foto ? 'Cambiar' : 'Elegir foto'}
+              <input type="file" accept="image/*" onChange={elegirFoto} style={{ display: 'none' }} />
+            </label>
+            {foto ? (
+              <button type="button" className="btn fantasma chico" onClick={() => setFoto('')}>
+                Quitar
+              </button>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
       <div className="campo">
         <label>Nombre y apellido</label>
         <input

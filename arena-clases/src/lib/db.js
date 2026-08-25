@@ -62,6 +62,7 @@ export function dbVacia() {
       codigoPais: '58',
       telefonoContacto: '',
       compensarLluviaIlimitado: true,
+      tema: 'auto',
       ultimoRespaldo: null,
       updated_at: null,
     },

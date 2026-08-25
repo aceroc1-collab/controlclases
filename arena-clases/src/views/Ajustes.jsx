@@ -36,7 +36,7 @@ export default function Ajustes({ db, acc, avisar, sesion, sync, onSincronizar, 
         {!hayNube ? (
           <div className="aviso-caja" style={{ marginTop: 12 }}>
             La nube no está configurada en este despliegue. La app funciona solo con los datos de este dispositivo.
-            Para activarla, agrega las variables <b>VITE_SUPABASE_URL</b> y <b>VITE_SUPABASE_ANON_KEY</b> en Vercel y
+            Para activarla, agrega las variables <b>VITE_SUPABASE_URL</b> y <b>VITE_SUPABASE_KEY</b> en Vercel y
             vuelve a desplegar.
           </div>
         ) : sesion ? (
@@ -85,6 +85,28 @@ export default function Ajustes({ db, acc, avisar, sesion, sync, onSincronizar, 
       </div>
 
       <div className="seccion">
+        <h2>Apariencia</h2>
+        <div className="chips" style={{ marginTop: 12, marginBottom: 0 }}>
+          {[
+            ['auto', 'Auto'],
+            ['claro', 'Claro'],
+            ['oscuro', 'Oscuro'],
+          ].map(([v, t]) => (
+            <button
+              key={v}
+              className={'chip' + ((db.ajustes.tema || 'auto') === v ? ' on' : '')}
+              onClick={() => guardarAjuste('tema', v)}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+        <div className="mini" style={{ marginTop: 8 }}>
+          Auto sigue el modo del teléfono. Oscuro ayuda a leer la pantalla a pleno sol en la cancha.
+        </div>
+      </div>
+
+      <div className="seccion">
         <h2>Academia</h2>
         <div className="card" style={{ marginTop: 12 }}>
           <div className="campo">
@@ -117,7 +139,7 @@ export default function Ajustes({ db, acc, avisar, sesion, sync, onSincronizar, 
               placeholder="+58 412 1234567"
               inputMode="tel"
             />
-            <div className="ayuda">Es el número al que te escriben los alumnos desde su enlace privado.</div>
+            <div className="ayuda">Aparece al pie del informe que les envías, para que sepan a quién escribir.</div>
           </div>
           <div className="campo" style={{ marginBottom: 0 }}>
             <label>

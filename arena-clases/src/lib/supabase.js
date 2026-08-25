@@ -1,7 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 
 const URL = import.meta.env.VITE_SUPABASE_URL
-const CLAVE = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+// Supabase cambió el nombre de la clave pública: los proyectos nuevos entregan
+// una "publishable key" y los viejos la "anon key". Se aceptan las dos para no
+// depender de en qué momento se creó el proyecto.
+const CLAVE =
+  import.meta.env.VITE_SUPABASE_KEY ||
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY
 
 // Si no hay variables de entorno la app funciona igual, solo que sin nube.
 export const hayNube = Boolean(URL && CLAVE)

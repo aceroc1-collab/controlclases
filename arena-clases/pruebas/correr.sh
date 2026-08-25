@@ -27,11 +27,15 @@ node pruebas/informe.mjs
 echo "=== Sincronización ==="
 npx esbuild pruebas/sincronizacion.mjs --bundle --platform=node --format=cjs --outfile=/tmp/p-sync.cjs \
   $FAKE --define:import.meta.env.VITE_SUPABASE_URL='"https://falso.supabase.co"' \
-  --define:import.meta.env.VITE_SUPABASE_ANON_KEY='"clave-falsa"' >/dev/null
+  --define:import.meta.env.VITE_SUPABASE_KEY='"clave-falsa"' \
+  --define:import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY='""' \
+  --define:import.meta.env.VITE_SUPABASE_ANON_KEY='""' >/dev/null
 node /tmp/p-sync.cjs
 
 echo "=== Pantallas ==="
 npx esbuild pruebas/pantallas.mjs --bundle --platform=node --format=cjs --outfile=/tmp/p-pant.cjs \
   $FAKE --inject:/tmp/globals-prueba.js --define:import.meta.env.VITE_SUPABASE_URL='"https://falso.supabase.co"' \
-  --define:import.meta.env.VITE_SUPABASE_ANON_KEY='"clave-falsa"' >/dev/null
+  --define:import.meta.env.VITE_SUPABASE_KEY='"clave-falsa"' \
+  --define:import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY='""' \
+  --define:import.meta.env.VITE_SUPABASE_ANON_KEY='""' >/dev/null
 node /tmp/p-pant.cjs

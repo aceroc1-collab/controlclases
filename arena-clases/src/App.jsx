@@ -5,6 +5,7 @@ import { panelCobranza } from './lib/motor.js'
 import { hayNube, sesionActual, supabase } from './lib/supabase.js'
 import { sincronizar } from './lib/sync.js'
 import { Entrar, EstadoSync } from './components/Sesion.jsx'
+import { Icono } from './components/UI.jsx'
 import Hoy from './views/Hoy.jsx'
 import Alumnos from './views/Alumnos.jsx'
 import AlumnoDetalle from './views/AlumnoDetalle.jsx'
@@ -13,11 +14,11 @@ import Ingresos from './views/Ingresos.jsx'
 import AjustesView from './views/Ajustes.jsx'
 
 const TABS = [
-  { id: 'hoy', ico: '☀', txt: 'Hoy' },
-  { id: 'alumnos', ico: '⚉', txt: 'Alumnos' },
-  { id: 'cobranza', ico: '◎', txt: 'Cobranza' },
-  { id: 'ingresos', ico: '▤', txt: 'Ingresos' },
-  { id: 'ajustes', ico: '⚙', txt: 'Ajustes' },
+  { id: 'hoy', txt: 'Hoy' },
+  { id: 'alumnos', txt: 'Alumnos' },
+  { id: 'cobranza', txt: 'Cobranza' },
+  { id: 'ingresos', txt: 'Ingresos' },
+  { id: 'ajustes', txt: 'Ajustes' },
 ]
 
 const TITULOS = {
@@ -50,6 +51,13 @@ export default function App() {
   useEffect(() => {
     pedirAlmacenamientoPersistente()
   }, [])
+
+  // El tema manual gana sobre el del sistema; 'auto' deja que decida prefers-color-scheme.
+  useEffect(() => {
+    const tema = db.ajustes.tema
+    if (tema && tema !== 'auto') document.documentElement.dataset.tema = tema
+    else delete document.documentElement.dataset.tema
+  }, [db.ajustes.tema])
 
   useEffect(() => {
     if (!toast) return
@@ -180,7 +188,7 @@ export default function App() {
         {TABS.map((t) => (
           <button key={t.id} className={tab === t.id ? 'on' : ''} onClick={() => cambiarTab(t.id)}>
             <span className="ico" aria-hidden="true">
-              {t.ico}
+              <Icono nombre={t.id} />
             </span>
             {t.txt}
             {t.id === 'cobranza' && pendientes > 0 ? <span className="pip">{pendientes}</span> : null}

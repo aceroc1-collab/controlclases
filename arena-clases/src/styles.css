@@ -17,6 +17,10 @@
   --rojo-claro: #f8dfdc;
   --linea: rgba(15, 36, 64, 0.14);
   --linea-fuerte: rgba(15, 36, 64, 0.3);
+  /* Texto/iconos sobre fondos marino (nav activo, botones .pri, chips activos).
+     A propósito no se redefine en modo oscuro: --papel se oscurece para las
+     tarjetas, pero esto necesita quedarse claro para que el contraste no se rompa. */
+  --claro: #fffdf8;
   --r: 12px;
   --r-sm: 8px;
   --sombra: 0 1px 2px rgba(15, 36, 64, 0.08);
@@ -169,8 +173,14 @@ textarea {
   line-height: 1;
 }
 
+.nav button .ico svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
 .nav button.on {
-  color: var(--papel);
+  color: var(--claro);
 }
 
 .nav button.on::before {
@@ -240,18 +250,45 @@ textarea {
   flex: 0 0 40px;
   border-radius: 50%;
   background: var(--marino);
-  color: var(--papel);
+  color: var(--claro);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Archivo', sans-serif;
   font-weight: 700;
   font-size: 14px;
+  overflow: hidden;
+  position: relative;
 }
 
 .avatar.func {
   background: var(--dorado);
   color: var(--marino);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Anillo de severidad: doble capa para que se note sobre cualquier fondo. */
+.avatar.anillo-rojo {
+  box-shadow: 0 0 0 2px var(--papel), 0 0 0 4px var(--rojo);
+}
+
+.avatar.anillo-oro {
+  box-shadow: 0 0 0 2px var(--papel), 0 0 0 4px var(--dorado);
+}
+
+/* Borde de severidad en tarjetas y filas de lista, además del tag de texto. */
+.borde-rojo {
+  border-left: 3px solid var(--rojo);
+}
+
+.borde-oro {
+  border-left: 3px solid var(--dorado);
 }
 
 .nombre {
@@ -321,6 +358,76 @@ textarea {
   background: var(--rojo);
 }
 
+/* Mini barra: la versión de una fila de lista, sin el bloque completo de gauges. */
+.barra.mini {
+  height: 5px;
+  margin-top: 6px;
+}
+
+.barra.ancha {
+  height: 10px;
+}
+
+.barra span.tono-rojo {
+  background: var(--rojo);
+}
+
+.barra span.tono-oro {
+  background: var(--dorado);
+}
+
+.barra span.tono-verde {
+  background: var(--verde);
+}
+
+/* Barra segmentada: cobrado / por cobrar / en riesgo, proporcional a lo comprometido. */
+.barra-segmentada {
+  display: flex;
+  height: 14px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--arena-2);
+}
+
+.barra-segmentada span {
+  display: block;
+  height: 100%;
+}
+
+.barra-segmentada .seg-cobrado {
+  background: var(--verde);
+}
+
+.barra-segmentada .seg-porcobrar {
+  background: var(--tinta-3);
+}
+
+.barra-segmentada .seg-riesgo {
+  background: var(--rojo);
+}
+
+.barra-leyenda {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--tinta-2);
+}
+
+.barra-leyenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.barra-leyenda i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
 .veredicto {
   margin-top: 12px;
   padding: 9px 11px;
@@ -377,7 +484,7 @@ textarea {
 }
 .tag.marino {
   background: var(--marino);
-  color: var(--papel);
+  color: var(--claro);
 }
 
 /* ---------- botones ---------- */
@@ -406,7 +513,7 @@ textarea {
 .btn.pri {
   background: var(--marino);
   border-color: var(--marino);
-  color: var(--papel);
+  color: var(--claro);
 }
 
 .btn.oro {
@@ -565,7 +672,7 @@ textarea {
 .dias-sel button.on {
   background: var(--marino);
   border-color: var(--marino);
-  color: var(--papel);
+  color: var(--claro);
 }
 
 /* ---------- modal ---------- */
@@ -652,7 +759,7 @@ textarea {
 .metrica.acento {
   background: var(--marino);
   border-color: var(--marino);
-  color: var(--papel);
+  color: var(--claro);
 }
 .metrica.acento .et {
   color: rgba(255, 253, 248, 0.7);
@@ -684,6 +791,12 @@ textarea {
 .vacio h3 {
   margin-bottom: 6px;
   color: var(--tinta);
+}
+
+.vacio-icono {
+  margin: 0 auto 10px;
+  color: var(--tinta-3);
+  display: block;
 }
 
 .hist {
@@ -720,7 +833,7 @@ textarea {
 .chip.on {
   background: var(--marino);
   border-color: var(--marino);
-  color: var(--papel);
+  color: var(--claro);
 }
 
 .aviso-caja {
@@ -739,7 +852,7 @@ textarea {
   transform: translateX(-50%);
   bottom: calc(var(--nav-h) + 16px);
   background: var(--marino);
-  color: var(--papel);
+  color: var(--claro);
   padding: 11px 18px;
   border-radius: 22px;
   font-size: 14px;
@@ -856,4 +969,143 @@ textarea {
   margin-top: 10px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   color: var(--tinta-2);
+}
+
+/* ---------- vista de agenda semanal ---------- */
+.semana-barras {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 64px;
+  padding: 10px 4px 0;
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+}
+
+.semana-barra {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  height: 100%;
+}
+
+.semana-barra .col {
+  width: 100%;
+  max-width: 26px;
+  border-radius: 4px 4px 0 0;
+  background: var(--tinta-3);
+  min-height: 3px;
+}
+
+.semana-barra.hoy .col {
+  background: var(--dorado);
+}
+
+.semana-barra.vacia .col {
+  background: var(--linea-fuerte);
+}
+
+.semana-barra .et {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--tinta-2);
+  text-transform: uppercase;
+}
+
+.semana-barra.hoy .et {
+  color: var(--tinta);
+}
+
+.semana-dia {
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.semana-dia + .semana-dia {
+  margin-top: 8px;
+}
+
+.semana-dia.hoy {
+  border-color: rgba(192, 138, 46, 0.5);
+  background: var(--dorado-claro);
+}
+
+.semana-dia-cab {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.semana-bloque {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--tinta-2);
+  padding: 3px 0;
+}
+
+.punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tinta-3);
+  flex: 0 0 7px;
+}
+
+.punto.rojo {
+  background: var(--rojo);
+}
+
+/* ---------- modo oscuro / alto contraste ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    --arena: #141a22;
+    --arena-2: #1c242f;
+    --papel: #1b232d;
+    --marino: #0b1622;
+    --marino-2: #14283f;
+    --tinta: #eef1f5;
+    --tinta-2: #aab4c0;
+    --tinta-3: #7c8794;
+    --dorado: #e0a63f;
+    --dorado-claro: #3a2f14;
+    --verde: #4bbd8f;
+    --verde-claro: #123024;
+    --ambar: #e0a63f;
+    --ambar-claro: #3a2f14;
+    --rojo: #e2685c;
+    --rojo-claro: #3a1a17;
+    --linea: rgba(255, 255, 255, 0.12);
+    --linea-fuerte: rgba(255, 255, 255, 0.28);
+  }
+}
+
+:root[data-tema='oscuro'] {
+  --arena: #141a22;
+  --arena-2: #1c242f;
+  --papel: #1b232d;
+  --marino: #0b1622;
+  --marino-2: #14283f;
+  --tinta: #eef1f5;
+  --tinta-2: #aab4c0;
+  --tinta-3: #7c8794;
+  --dorado: #e0a63f;
+  --dorado-claro: #3a2f14;
+  --verde: #4bbd8f;
+  --verde-claro: #123024;
+  --ambar: #e0a63f;
+  --ambar-claro: #3a2f14;
+  --rojo: #e2685c;
+  --rojo-claro: #3a1a17;
+  --linea: rgba(255, 255, 255, 0.12);
+  --linea-fuerte: rgba(255, 255, 255, 0.28);
 }

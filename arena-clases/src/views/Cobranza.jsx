@@ -81,9 +81,9 @@ export default function Cobranza({ db, acc, irAlumno, avisar }) {
         ) : (
           <div className="card" style={{ marginTop: 12 }}>
             {conDeuda.map(({ alumno, saldo }) => (
-              <div className="lista-item" key={alumno.id}>
+              <div className="lista-item borde-rojo" key={alumno.id}>
                 <div onClick={() => irAlumno(alumno.id)}>
-                  <Avatar nombre={alumno.nombre} disciplina={alumno.disciplina} />
+                  <Avatar nombre={alumno.nombre} disciplina={alumno.disciplina} foto={alumno.foto} anillo="rojo" />
                 </div>
                 <div className="crece" onClick={() => irAlumno(alumno.id)}>
                   <div className="nombre">{alumno.nombre}</div>
@@ -128,10 +128,10 @@ function Grupo({ titulo, vacio, items, db, irAlumno, setWA, pintar, ultimoEnvio 
           const envio = ultimoEnvio(alumno.id)
           const debe = saldoTotalPositivo(saldo)
           return (
-            <div className="card" key={plan.id}>
+            <div className={'card borde-' + p.clase} key={plan.id}>
               <div className="fila">
                 <div onClick={() => irAlumno(alumno.id)}>
-                  <Avatar nombre={alumno.nombre} disciplina={plan.disciplina} />
+                  <Avatar nombre={alumno.nombre} disciplina={plan.disciplina} foto={alumno.foto} anillo={p.clase} />
                 </div>
                 <div className="crece" onClick={() => irAlumno(alumno.id)} style={{ cursor: 'pointer' }}>
                   <div className="nombre">{alumno.nombre}</div>

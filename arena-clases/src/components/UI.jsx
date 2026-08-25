@@ -31,7 +31,7 @@ export function Modal({ titulo, onCerrar, children }) {
   )
 }
 
-export function Avatar({ nombre, disciplina }) {
+export function Avatar({ nombre, disciplina, foto, anillo }) {
   const iniciales = (nombre || '?')
     .split(' ')
     .filter(Boolean)
@@ -39,17 +39,79 @@ export function Avatar({ nombre, disciplina }) {
     .map((p) => p[0])
     .join('')
     .toUpperCase()
-  return <div className={'avatar' + (disciplina === 'funcional' ? ' func' : '')}>{iniciales}</div>
+  const clase =
+    'avatar' +
+    (disciplina === 'funcional' && !foto ? ' func' : '') +
+    (anillo ? ' anillo-' + anillo : '')
+  return <div className={clase}>{foto ? <img src={foto} alt="" /> : iniciales}</div>
 }
 
-export function Vacio({ titulo, texto, children }) {
+// Icono de trazo fino por defecto para los estados vacíos: una pelota de
+// beach tennis esquemática, coherente con la cinta de cancha del resto de la app.
+function IconoVacio() {
+  return (
+    <svg className="vacio-icono" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M4.5 8.5c2.5 1.6 5 1.6 7.5 0s5-1.6 7.5 0" />
+      <path d="M4.5 15.5c2.5-1.6 5-1.6 7.5 0s5 1.6 7.5 0" />
+    </svg>
+  )
+}
+
+export function Vacio({ titulo, texto, children, icono }) {
   return (
     <div className="vacio">
+      {icono === null ? null : icono || <IconoVacio />}
       <h3>{titulo}</h3>
       <div className="mini">{texto}</div>
       {children ? <div style={{ marginTop: 14 }}>{children}</div> : null}
     </div>
   )
+}
+
+// Set de iconos del nav inferior: trazo fino, coherente entre sí y con la
+// identidad de la app, en vez de glifos unicode que varían según el sistema.
+export function Icono({ nombre }) {
+  const props = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }
+  if (nombre === 'hoy')
+    return (
+      <svg {...props}>
+        <circle cx="12" cy="12" r="4.5" />
+        <path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8" />
+      </svg>
+    )
+  if (nombre === 'alumnos')
+    return (
+      <svg {...props}>
+        <circle cx="9" cy="8.5" r="3" />
+        <path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5" />
+        <circle cx="17" cy="9" r="2.3" />
+        <path d="M15.7 14.2c2.3.3 4.3 2 4.3 4.8" />
+      </svg>
+    )
+  if (nombre === 'cobranza')
+    return (
+      <svg {...props}>
+        <circle cx="12" cy="12" r="8.5" />
+        <circle cx="12" cy="12" r="4.5" />
+        <circle cx="12" cy="12" r="0.6" fill="currentColor" />
+      </svg>
+    )
+  if (nombre === 'ingresos')
+    return (
+      <svg {...props}>
+        <path d="M4 20V10M11 20V4M18 20v-7" />
+        <path d="M2.5 20h19" />
+      </svg>
+    )
+  if (nombre === 'ajustes')
+    return (
+      <svg {...props}>
+        <circle cx="12" cy="12" r="3.2" />
+        <path d="M12 3.5v2.3M12 18.2v2.3M20.5 12h-2.3M5.8 12H3.5M17.9 6.1l-1.6 1.6M7.7 16.3l-1.6 1.6M17.9 17.9l-1.6-1.6M7.7 7.7 6.1 6.1" />
+      </svg>
+    )
+  return null
 }
 
 export function etiquetaPlan(plan, est) {
@@ -64,8 +126,8 @@ export function descripcionHorario(plan) {
   return `${dias} · ${fmtHora(plan.hora)}`
 }
 
-/** El doble contador: la vigencia y el consumo compitiendo. */
-export function DobleContador({ plan, est }) {
+/** Porcentajes de vigencia y consumo, y cuál de los dos va ganando la carrera al vencimiento. */
+export function calcularPcts(plan, est) {
   const diasTotales = est.ilimitado || plan.modo === 'libre' ? est.duracionDias : null
   let pctDias
   if (plan.modo === 'fija') {
@@ -78,6 +140,25 @@ export function DobleContador({ plan, est }) {
   }
   const pctClases = est.ilimitado ? 0 : Math.min(100, (est.consumidas / Math.max(1, est.total)) * 100)
   const lidera = est.venceP === 'clases' ? 'clases' : 'fecha'
+  return { diasTotales, pctDias, pctClases, lidera }
+}
+
+// Barra angosta para filas de lista: la versión de un solo trazo del doble
+// contador, cuando no hay espacio (o falta) para las dos barras completas.
+export function MiniBarra({ pct, tono }) {
+  return (
+    <div className="barra mini">
+      <span
+        className={tono ? 'tono-' + tono : ''}
+        style={{ width: `${Math.max(0, Math.min(100, pct))}%` }}
+      />
+    </div>
+  )
+}
+
+/** El doble contador: la vigencia y el consumo compitiendo. */
+export function DobleContador({ plan, est }) {
+  const { diasTotales, pctDias, pctClases, lidera } = calcularPcts(plan, est)
 
   return (
     <div className="gauges">

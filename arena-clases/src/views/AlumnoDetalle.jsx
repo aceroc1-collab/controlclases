@@ -41,7 +41,7 @@ export default function AlumnoDetalle({ db, acc, alumnoId, volver, avisar }) {
 
       <div className="card">
         <div className="fila">
-          <Avatar nombre={alumno.nombre} disciplina={alumno.disciplina} />
+          <Avatar nombre={alumno.nombre} disciplina={alumno.disciplina} foto={alumno.foto} />
           <div className="crece">
             <div className="nombre">{alumno.nombre}</div>
             <div className="sub">

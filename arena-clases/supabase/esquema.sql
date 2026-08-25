@@ -76,4 +76,7 @@ create policy "coach borra lo suyo" on public.registros
   using (coach_id = auth.uid());
 
 -- Nada es legible sin sesión iniciada: no hay ninguna vía pública de lectura.
+-- Esto aplica igual con la clave publicable nueva (sb_publishable_...) que con
+-- la anon de siempre: sin sesión, quien consulta es el rol anon.
 revoke all on public.registros from anon;
+grant select, insert, update, delete on public.registros to authenticated;
